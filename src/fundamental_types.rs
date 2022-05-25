@@ -30,7 +30,7 @@ impl RefId {
     /// This function returns the respective type containing the value, already parsed.
     /// formIDArray indexes have already 1 subtracted to be used directly.
     pub fn get_form_id(&self) -> FormIdType {
-        match &self.byte0 & 0b11000000 {
+        match &self.byte0 >> 6 {
             0 => {
                 let parsed_id = self.get_parsed_id();
                 if parsed_id == 0 {
@@ -39,10 +39,10 @@ impl RefId {
                     FormIdType::Index(parsed_id - 1)
                 }
             },
-            64 => {
+            1 => {
                 FormIdType::Default(self.get_parsed_id())
             },
-            128 => {
+            2 => {
                 FormIdType::Created(self.get_parsed_id())
             },
             _ => FormIdType::Unknown(self.get_parsed_id())
